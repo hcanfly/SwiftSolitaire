@@ -41,6 +41,13 @@ func scaled(value: CGFloat) -> CGFloat {
     return  value * scaleFactor
 }
 
+struct FileUtilities {
+    
+    static func documentsDirectory() -> String {
+        return NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+    }
+}
+
 // Example
 //private extension Selector {
 //    static let handlePan = #selector(GameController.handlePan(_:))

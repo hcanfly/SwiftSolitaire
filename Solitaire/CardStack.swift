@@ -69,9 +69,9 @@ final class TableauStack : CardDataStack {
     override func canAccept(droppedCard: Card) -> Bool {
         
         if let topCard = self.topCard() {
-            let (topCardSuit, topCardRank) = topCard.getCardSuitAndRank()
-            let (droppedCardSuit, droppedCardRank) = droppedCard.getCardSuitAndRank()
-            if topCard.faceUp && !(topCardSuit == droppedCardSuit) && (droppedCardRank == topCardRank - 1) {
+            let (_, topCardRank) = topCard.getCardSuitAndRank()
+            let (_, droppedCardRank) = droppedCard.getCardSuitAndRank()
+            if topCard.faceUp && !topCard.cardSuitIsSameColor(card: droppedCard) && (droppedCardRank == topCardRank - 1) {
                 return true
             }
         } else {
