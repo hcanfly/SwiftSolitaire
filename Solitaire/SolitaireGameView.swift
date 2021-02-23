@@ -9,7 +9,7 @@
 import UIKit
 
 
-let SPACING = CGFloat(UIScreen.main.bounds.width > 750 ? 10.0 : 3.0)
+fileprivate let SPACING = CGFloat(UIScreen.main.bounds.width > 750 ? 10.0 : 3.0)
 let CARD_WIDTH = CGFloat((UIScreen.main.bounds.width - CGFloat(7.0 * SPACING)) / 7.0)
 let CARD_HEIGHT = CARD_WIDTH * 1.42
 
@@ -17,18 +17,19 @@ private extension Selector {
     static let handleTap = #selector(SolitaireGameView.newDealAction)
 }
 
+
 final class SolitaireGameView: UIView {
-    var baseTableauFrameRect = CGRect.init()
     
-    var foundationStacks = [FoundationCardStackView]()
-    var tableauStackViews = [TableauStackView]()
-    var stockStackView = StockCardStackView(frame: CGRect.zero)
-    var talonStackView = TalonCardStackView()
-    var doingDrag = false           // flag to keep callbacks from trying to do stuff on touches when not dragging
-    var dragView = DragStackView(frame: CGRect.zero, cards: Model.sharedInstance.dragStack)   // view containing cards being dragged.
-    var stackDraggedFrom: CardStackView?
-    var dragPosition = CGPoint.zero
-    
+    private var foundationStacks = [FoundationCardStackView]()
+    private var tableauStackViews = [TableauStackView]()
+    private var stockStackView = StockCardStackView(frame: CGRect.zero)
+    private var talonStackView = TalonCardStackView()
+    private var doingDrag = false           // flag to keep callbacks from trying to do stuff on touches when not dragging
+    private var dragView = DragStackView(frame: CGRect.zero, cards: Model.sharedInstance.dragStack)   // view containing cards being dragged.
+    private var stackDraggedFrom: CardStackView?
+    private var dragPosition = CGPoint.zero
+    private var baseTableauFrameRect = CGRect.init()
+
     //MARK: Init
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -53,7 +54,7 @@ final class SolitaireGameView: UIView {
         foundationRect = foundationRect.offsetBy(dx: CGFloat(CARD_WIDTH + SPACING), dy: 0.0)
         self.talonStackView = TalonCardStackView(frame: foundationRect, cards: Model.sharedInstance.talonStack)
         self.addSubview(self.talonStackView)
-
+        
         foundationRect = foundationRect.offsetBy(dx: CGFloat(CARD_WIDTH + SPACING), dy: 0.0)
         self.stockStackView = StockCardStackView(frame: foundationRect, cards: Model.sharedInstance.stockStack)
         self.addSubview(self.stockStackView)
@@ -104,8 +105,12 @@ final class SolitaireGameView: UIView {
             cardValuesIndex += 1
         }
     }
+    
+}
 
-    // MARK: Handle touches
+// MARK: Handle dragging
+extension SolitaireGameView {
+    
     override func touchesBegan(_ touches: Set<UITouch>,
                                with event: UIEvent?) {
         let touch = touches.first!
@@ -149,7 +154,7 @@ final class SolitaireGameView: UIView {
                                 let index = stackDraggedFrom!.cards.cards.firstIndex { $0.value == card.value }
                                 stackDraggedFrom!.cards.cards.remove(at: index!)
                             }
-
+                            
                             stackDraggedFrom?.refresh()
                             dragView.refresh()
                             dragPosition = touchPoint
@@ -180,7 +185,7 @@ final class SolitaireGameView: UIView {
     private func moveDragView(offset: CGPoint) {
         dragView.center = CGPoint(x: dragView.center.x + offset.x, y: dragView.center.y + offset.y)
     }
-
+    
     override func touchesCancelled(_ touches: Set<UITouch>,
                                    with event: UIEvent?) {
         guard doingDrag else {
@@ -190,7 +195,7 @@ final class SolitaireGameView: UIView {
         dragView.cards.cards.forEach{ card in stackDraggedFrom!.cards.addCard(card: card) }
         dragView.removeFromSuperview()
         dragView.removeAllCardViews()
-
+        
         dragView.bounds = CGRect.zero
         doingDrag = false
     }
@@ -252,11 +257,11 @@ final class SolitaireGameView: UIView {
             doingDrag = false
         }
     }
-
-
+}
 
 // MARK: Double Tap
-
+extension SolitaireGameView {
+    
     // if a card in the talon stack or one of the tableau stacks is double-tapped,
     // see if it can be added to a foundation stack
     // if you copy / paste these two functions and replace Foundation with Tableau
@@ -277,7 +282,7 @@ final class SolitaireGameView: UIView {
             }
         }
     }
-
+    
     private func addCardToFoundation(card: Card) -> Bool {
         var addedCard = false
         
@@ -291,6 +296,4 @@ final class SolitaireGameView: UIView {
         
         return addedCard
     }
-
-
-}   // SolitaireGameView
+}

@@ -55,10 +55,10 @@ final class CardView: UIView {
         return cardValue % numberOfCardsInSuit == 0
     }
     
-    let mainImageView: UIImageView
-    let suitImageView: UIImageView
-    let rankLabel: UILabel
-    let backgroundImageView: UIImageView
+    private let mainImageView: UIImageView
+    private let suitImageView: UIImageView
+    private let rankLabel: UILabel
+    private let backgroundImageView: UIImageView
     
     
     private func getDisplayValueForRank(rank: Int) -> String {

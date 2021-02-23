@@ -15,8 +15,8 @@ class CardStackView: UIView, CardStackDelegate {
     init(frame: CGRect, cards: CardDataStack) {
         super.init(frame: frame)
         
-        self.cards = cards              // card values in the Model for this stack. used to generate CardViews.
-        self.cards.delegate = self      // when the Model stack changes the StackView is notified to re-generate its subviews
+        self.cards = cards              // view model for the cards in a stack
+        self.cards.delegate = self      // when the model's cards change the StackView is notified to re-generate its subviews
     }
     
     override init(frame: CGRect) {
